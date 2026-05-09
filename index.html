@@ -1409,9 +1409,18 @@
             background-size: 40px 40px;
             background-position: center top;
         }
+        
+        /* テーマ3：関連商品のダークモード調整 */
+        body.theme-3 .related-works { background: var(--color-text); padding: 80px 50px 120px; border-top: 1px solid rgba(255,255,255,0.05); color: var(--color-bg); }
+        body.theme-3 .related-title { color: var(--color-bg); }
+        body.theme-3 .related-item-title { color: var(--color-bg); }
+        body.theme-3 .related-item-image { border: none; background: transparent; box-shadow: none; }
+        body.theme-3 .related-item-image::after { display: none; }
+        body.theme-3 .related-item-image img { box-shadow: 0 10px 30px rgba(0,0,0,0.3); border-radius: 4px; }
+        
         body.theme-1 .header { border-bottom: 1px solid var(--color-border); }
         
-        body.theme-1 .hero { min-height: 75vh; } /* 下地の大きさを少しコンパクトに */
+        body.theme-1 .hero { min-height: 100vh; } /* ファーストビューでギャラリーが見えすぎないように高さを画面いっぱいに */
         body.theme-1 .hero-title { 
             font-size: clamp(50px, 8vw, 130px); /* どのテーマよりも文字を一番大きく */
             font-weight: 300; /* 大きくても上品さを保つために少し細く */
