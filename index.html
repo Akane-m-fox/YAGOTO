@@ -16,7 +16,7 @@
             --color-text: #1C1B18; /* 深みのある黒 */
             --color-muted: #948C76; /* アンティークゴールド系のくすみ色 */
             --color-border: #E0DCD3;
-            --color-accent: #C5A059; /* クラシックゴールド */
+            --color-accent: #8C5E58; /* 落ち着きのあるダスティーボルドー（アクセントカラー） */
             --font-serif: 'Playfair Display', "游明朝", YuMincho, "Hiragino Mincho ProN", serif;
             --font-sans: 'Montserrat', "Helvetica Neue", Arial, sans-serif;
             --font-sans-jp: 'Noto Sans JP', "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
@@ -105,9 +105,7 @@
             -moz-osx-font-smoothing: grayscale;
             transition: opacity 0.5s ease-in-out;
             margin: 0;
-            padding: 0;
-            /* 額縁分の余白を設ける */
-            padding: 15px;
+            padding: 0; /* デフォルトは余白なし */
             min-height: 100vh;
             box-sizing: border-box;
         }
@@ -115,25 +113,6 @@
         ::selection {
             background-color: var(--color-accent);
             color: #FFF;
-        }
-
-        /* 高級な額縁 (Frame) デザイン */
-        body::before {
-            content: '';
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            /* ダークカラーの外枠とゴールドの内枠を表現 */
-            border: 15px solid #1C1B18;
-            box-shadow: 
-                inset 0 0 0 2px var(--color-accent),
-                inset 0 0 20px rgba(0,0,0,0.05),
-                0 0 30px rgba(0,0,0,0.2);
-            z-index: 9999;
-            pointer-events: none;
-            animation: fadeUp 2s ease-out;
         }
 
         a {
@@ -153,9 +132,9 @@
             align-items: center;
             padding: 30px 50px;
             position: fixed;
-            top: 15px; /* 額縁の内側に配置 */
-            left: 15px;
-            right: 15px;
+            top: 0;
+            left: 0;
+            right: 0;
             background-color: rgba(253, 252, 251, 0.95);
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
@@ -274,24 +253,7 @@
             letter-spacing: 0.02em;
             line-height: 1.2;
             opacity: 0;
-            
-            /* ゴージャスなシャインエフェクト用の背景設定 */
-            background: linear-gradient(
-                120deg,
-                var(--color-text) 35%,
-                var(--color-accent) 45%, /* シャンパンゴールド風の光 */
-                #FFFFFF 50%,
-                var(--color-accent) 55%,
-                var(--color-text) 65%
-            );
-            background-size: 200% auto;
-            color: transparent;
-            -webkit-background-clip: text;
-            background-clip: text;
-
-            animation: 
-                cinematicReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
-                textShine 5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+            color: var(--color-text);
         }
         
         .hero-dot {
@@ -299,7 +261,6 @@
             font-size: 10px;
             color: var(--color-text);
             opacity: 0;
-            animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
         }
 
         .hero-subtitle {
@@ -309,7 +270,6 @@
             letter-spacing: 0.25em;
             color: var(--color-muted);
             opacity: 0;
-            animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
         }
         
         .scroll-indicator {
@@ -1222,11 +1182,8 @@
         }
 
         @media (max-width: 768px) {
-            body { padding: 10px; }
-            body::before { border-width: 10px; }
             .header {
                 padding: 20px 24px;
-                top: 10px; left: 10px; right: 10px;
             }
             .toolbar-wrapper {
                 top: 74px;
@@ -1421,35 +1378,58 @@
            ========================================= */
            
         @keyframes theme1TitleAnim {
-            0% { transform: translateY(40px); opacity: 0; letter-spacing: 0.15em; }
-            100% { transform: translateY(0); opacity: 1; letter-spacing: 0.02em; }
+            0% { 
+                transform: translateY(40px) scale(0.95); 
+                opacity: 0; 
+                letter-spacing: 0.25em; 
+                filter: blur(12px);
+            }
+            100% { 
+                transform: translateY(0) scale(1); 
+                opacity: 1; 
+                letter-spacing: 0.02em; 
+                filter: blur(0);
+            }
+        }
+        @keyframes theme1SubAnim {
+            0% { opacity: 0; filter: blur(5px); }
+            100% { opacity: 1; filter: blur(0); }
+        }
+
+        @keyframes theme2TitleAnim {
+            0% { transform: scale(1.05); opacity: 0; filter: blur(10px); }
+            100% { transform: scale(1); opacity: 1; filter: blur(0); }
         }
 
         /* Theme 1: Simple Base */
         body.theme-1 { 
-            padding: 0; 
-            /* 背景に上品な斜め線（ストライプ）を追加 */
+            /* アートギャラリーらしいモダンなドット（方眼）背景に変更 */
             background-color: var(--color-bg);
-            background-image: repeating-linear-gradient(
-                -45deg,
-                transparent,
-                transparent 15px,
-                rgba(28, 27, 24, 0.03) 15px,
-                rgba(28, 27, 24, 0.03) 16px
-            );
+            background-image: radial-gradient(rgba(28, 27, 24, 0.07) 1.5px, transparent 1.5px);
+            background-size: 40px 40px;
+            background-position: center top;
         }
-        body.theme-1::before { display: none; }
-        body.theme-1 .header { top: 0; left: 0; right: 0; border-bottom: 1px solid var(--color-border); }
+        body.theme-1 .header { border-bottom: 1px solid var(--color-border); }
+        
+        body.theme-1 .hero { min-height: 75vh; } /* 下地の大きさを少しコンパクトに */
         body.theme-1 .hero-title { 
-            background: none; 
-            color: var(--color-text); 
-            -webkit-background-clip: initial; 
-            background-clip: initial; 
-            /* 1番専用のシンプルなフェード＆スライドアップアニメーション */
-            animation: theme1TitleAnim 2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            font-size: clamp(50px, 8vw, 130px); /* どのテーマよりも文字を一番大きく */
+            font-weight: 300; /* 大きくても上品さを保つために少し細く */
+            line-height: 1.1;
+            animation: theme1TitleAnim 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
-        body.theme-1 .item-image, body.theme-1 .item-main-image { border: none; box-shadow: none; background: #F5F5F5; }
-        body.theme-1 .item-image::after, body.theme-1 .item-main-image::after { display: none; }
+        body.theme-1 .hero-subtitle {
+            font-size: 10px;
+            letter-spacing: 0.3em;
+            animation: theme1SubAnim 1.5s ease 0.4s forwards;
+        }
+        body.theme-1 .hero-dot {
+            color: var(--color-accent);
+            animation: theme1SubAnim 1s ease 0.2s forwards;
+        }
+        body.theme-1 .scroll-line {
+            background-color: var(--color-accent);
+        }
         
         /* ギャラリーの上下ずらし（PC・タブレット幅のみ） */
         @media (min-width: 769px) {
@@ -1462,12 +1442,22 @@
         }
 
         /* Theme 2: Rotating Background */
-        body.theme-2 { padding: 0; }
-        body.theme-2::before { display: none; }
-        body.theme-2 .header { top: 0; left: 0; right: 0; background: rgba(253, 252, 251, 0.8); }
-        body.theme-2 .hero-title { background: none; color: var(--color-text); -webkit-background-clip: initial; background-clip: initial; }
-        body.theme-2 .item-image, body.theme-2 .item-main-image { border-width: 8px; }
+        body.theme-2 .header { background: rgba(253, 252, 251, 0.8); }
         
+        body.theme-2 .hero { min-height: 100vh; padding-top: 0; } /* 2番は画面いっぱいに */
+        body.theme-2 .hero-title { 
+            font-size: clamp(45px, 7vw, 110px); /* 2番用にフォントサイズを大きく */
+            font-weight: 300;
+            letter-spacing: -0.01em;
+            animation: theme2TitleAnim 2.5s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        body.theme-2 .hero-subtitle {
+            font-size: 13px;
+            letter-spacing: 0.1em;
+            animation: theme1SubAnim 2s ease 0.6s forwards;
+        }
+        body.theme-2 .hero-dot { display: none; } /* 2番はドットを消す */
+
         .theme-bg-rotating {
             position: fixed;
             top: -50%; left: -50%; width: 200%; height: 200%;
@@ -1480,11 +1470,129 @@
         }
         body.theme-2 .theme-bg-rotating { display: block; opacity: 0.15; }
         
+        /* Theme 2: Item Page Overrides */
+        body.theme-2 .item-page-wrapper {
+            background: rgba(253, 252, 251, 0.7);
+            backdrop-filter: blur(25px);
+            -webkit-backdrop-filter: blur(25px);
+            padding: 60px;
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.6);
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.08);
+        }
+        body.theme-2 .item-main-image {
+            border-radius: 16px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+        }
+        body.theme-2 .item-page-title {
+            font-weight: 300;
+        }
+        
+        /* テーマ2：画像を大きく右に配置し、テキストボックスを左から大胆に重ねる（オーバーラップ）モダンレイアウト */
+        body.theme-2 .item-page { 
+            flex-direction: row-reverse; 
+            align-items: center; 
+            gap: 0; 
+        }
+        body.theme-2 .item-gallery {
+            flex: 1.4;
+            z-index: 1;
+        }
+        body.theme-2 .item-details {
+            flex: 1;
+            text-align: left;
+            background: var(--color-bg);
+            padding: 60px;
+            margin-right: -12%; /* 画像にテキストボックスを重ねる */
+            margin-top: 40px;
+            z-index: 10;
+            border: 1px solid var(--color-border);
+            box-shadow: -15px 30px 60px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+        body.theme-2 .item-page-title {
+            font-size: 42px;
+            line-height: 1.2;
+            margin-bottom: 15px;
+            margin-left: -80px; /* タイトルをボックスからさらに左へはみ出させる */
+            background: var(--color-text);
+            color: var(--color-bg);
+            padding: 15px 30px;
+            display: inline-block;
+            align-self: flex-start;
+        }
+        body.theme-2 .item-page-title::after { display: none; }
+        body.theme-2 .item-page-price { order: 0; margin-bottom: 30px; border-top: none; padding-top: 0; font-size: 24px; color: var(--color-accent); }
+        body.theme-2 .item-page-subtitle { margin-bottom: 20px; }
+        
+        /* Theme 3: Premium (Current) */
+        body.theme-3 { padding: 20px; }
+        body.theme-3::before {
+            content: '';
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            /* 額縁のメインの木枠の太さ */
+            border: 24px solid var(--color-accent);
+            /* 多重シャドウで額縁の溝、内側の段差、マットの奥行きをリアルに表現 */
+            box-shadow: 
+                inset 0 0 0 1px rgba(255,255,255,0.15), /* 枠の内側のハイライト */
+                inset 0 0 0 5px rgba(0,0,0,0.1), /* 額縁表面の浅い溝 */
+                inset 0 0 0 7px #5C3A36, /* 溝の影 */
+                inset 0 0 0 8px rgba(255,255,255,0.1), /* 溝のハイライト */
+                inset 0 0 30px 10px rgba(0,0,0,0.4), /* 絵（マット）に落ちる深い影 */
+                0 0 0 1px #3A2320, /* 一番外側の引き締めライン */
+                0 15px 40px rgba(0,0,0,0.4); /* ブラウザ全体に落ちる影 */
+            z-index: 9999;
+            pointer-events: none;
+            animation: fadeUp 2s ease-out;
+        }
+        body.theme-3 .item-image {
+            border: 12px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 10px 30px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+        }
+        body.theme-3 .item-image::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 8px rgba(0,0,0,0.08); pointer-events: none; z-index: 1;
+        }
+        body.theme-3 .item-main-image {
+            border: 24px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 15px 40px rgba(0,0,0,0.06);
+            box-sizing: border-box;
+        }
+        body.theme-3 .item-main-image::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 12px rgba(0,0,0,0.08); pointer-events: none; z-index: 1;
+        }
+        body.theme-3 .related-item-image {
+            border: 8px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 5px 15px rgba(0,0,0,0.04);
+            box-sizing: border-box;
+        }
+        body.theme-3 .related-item-image::after {
+            content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; box-shadow: inset 0 0 6px rgba(0,0,0,0.08); pointer-events: none; z-index: 1;
+        }
+        body.theme-3 .header { top: 20px; left: 20px; right: 20px; }
+        body.theme-3 .hero-title {
+            background: linear-gradient(120deg, var(--color-text) 35%, var(--color-accent) 45%, #FFFFFF 50%, var(--color-accent) 55%, var(--color-text) 65%);
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+            animation: cinematicReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards, textShine 5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+        }
+        body.theme-3 .hero-dot { animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards; }
+        body.theme-3 .hero-subtitle { animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards; }
+        @media (max-width: 768px) {
+            body.theme-3 { padding: 10px; }
+            body.theme-3::before { border-width: 10px; }
+            body.theme-3 .header { top: 10px; left: 10px; right: 10px; }
+        }
+
         /* Active state for switcher button */
         .dev-page-switcher button.is-active { background: var(--color-text); color: var(--color-bg); border-color: var(--color-text); }
     </style>
 </head>
-<body>
+<body class="theme-1">
     <header class="header">
         <div class="header-logo"><a href="#"><img src="images/Logo.png" alt="YAGOTO ART GALLERY"></a></div>
         <nav class="header-nav">
@@ -2105,14 +2213,29 @@
                 const themeBtns = document.querySelectorAll('#dev-theme-switcher button');
                 themeBtns.forEach(btn => {
                     btn.addEventListener('click', () => {
-                        document.body.classList.remove('theme-1', 'theme-2');
+                        document.body.classList.remove('theme-1', 'theme-2', 'theme-3');
                         themeBtns.forEach(b => b.classList.remove('is-active'));
                         
                         const theme = btn.dataset.theme;
-                        if (theme !== 'theme-3') {
-                            document.body.classList.add(theme);
-                        }
+                        document.body.classList.add(theme);
                         btn.classList.add('is-active');
+
+                        // ヒーローセクションのアニメーションをリセットして再発火させる（バグ防止）
+                        const heroTitle = document.querySelector('.hero-title');
+                        const heroSub = document.querySelector('.hero-subtitle');
+                        const heroDot = document.querySelector('.hero-dot');
+                        
+                        if (heroTitle) {
+                            heroTitle.style.animation = 'none';
+                            if (heroSub) heroSub.style.animation = 'none';
+                            if (heroDot) heroDot.style.animation = 'none';
+                            
+                            void heroTitle.offsetWidth; // リフロー（再描画）を強制
+                            
+                            heroTitle.style.animation = '';
+                            if (heroSub) heroSub.style.animation = '';
+                            if (heroDot) heroDot.style.animation = '';
+                        }
                     });
                 });
 
