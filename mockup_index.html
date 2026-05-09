@@ -1,0 +1,2022 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YAGOTO ART GALLERY</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400&family=Playfair+Display:ital,wght@0,400;1,400&family=Noto+Sans+JP:wght@300;400&family=Noto+Serif+JP:wght@300;400&display=swap" rel="stylesheet">
+    
+    <style>
+        :root {
+            --color-bg: #FDFCFB; /* 上質なアイボリーホワイト */
+            --color-text: #1C1B18; /* 深みのある黒 */
+            --color-muted: #948C76; /* アンティークゴールド系のくすみ色 */
+            --color-border: #E0DCD3;
+            --color-accent: #C5A059; /* クラシックゴールド */
+            --font-serif: 'Playfair Display', "游明朝", YuMincho, "Hiragino Mincho ProN", serif;
+            --font-sans: 'Montserrat', "Helvetica Neue", Arial, sans-serif;
+            --font-sans-jp: 'Noto Sans JP', "游ゴシック体", YuGothic, "游ゴシック", "Yu Gothic", sans-serif;
+        }
+
+        /* Animations */
+        @keyframes slideDown {
+            from { transform: translateY(-100%); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes fadeUp {
+            from { transform: translateY(40px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        @keyframes revealText {
+            from { transform: translateY(20px); opacity: 0; filter: blur(8px); }
+            to { transform: translateY(0); opacity: 1; filter: blur(0); }
+        }
+
+        @keyframes cinematicReveal {
+            0% {
+                transform: translateY(50px);
+                opacity: 0;
+                letter-spacing: -0.05em;
+            }
+            100% {
+                transform: translateY(0);
+                opacity: 1;
+                letter-spacing: 0.02em;
+            }
+        }
+
+        @keyframes revealAccent {
+            0% {
+                transform: translateX(40px) scale(1.05);
+                opacity: 0;
+                filter: blur(15px);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 0.3;
+                filter: blur(0);
+            }
+        }
+
+        @keyframes revealAccentLeft {
+            0% {
+                transform: translateX(-40px) scale(1.05);
+                opacity: 0;
+                filter: blur(15px);
+            }
+            100% {
+                transform: translateX(0) scale(1);
+                opacity: 0.2; /* 少し薄めに調整 */
+                filter: blur(0);
+            }
+        }
+
+        @keyframes textShine {
+            0% { background-position: 200% center; }
+            100% { background-position: -200% center; }
+        }
+        
+        @keyframes scrollLine {
+            0% { transform: scaleY(0); transform-origin: top; }
+            50% { transform: scaleY(1); transform-origin: top; }
+            50.1% { transform: scaleY(1); transform-origin: bottom; }
+            100% { transform: scaleY(0); transform-origin: bottom; }
+        }
+
+        @keyframes revealBgArtwork {
+            0% { opacity: 0; transform: scale(1.1); filter: blur(20px); }
+            100% { opacity: 0.4; transform: scale(1); filter: blur(0); } /* 文字が見えやすいように少し薄く */
+        }
+
+        @keyframes slowSpin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        body {
+            font-family: var(--font-serif);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            transition: opacity 0.5s ease-in-out;
+            margin: 0;
+            padding: 0;
+            /* 額縁分の余白を設ける */
+            padding: 15px;
+            min-height: 100vh;
+            box-sizing: border-box;
+        }
+
+        ::selection {
+            background-color: var(--color-accent);
+            color: #FFF;
+        }
+
+        /* 高級な額縁 (Frame) デザイン */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            /* ダークカラーの外枠とゴールドの内枠を表現 */
+            border: 15px solid #1C1B18;
+            box-shadow: 
+                inset 0 0 0 2px var(--color-accent),
+                inset 0 0 20px rgba(0,0,0,0.05),
+                0 0 30px rgba(0,0,0,0.2);
+            z-index: 9999;
+            pointer-events: none;
+            animation: fadeUp 2s ease-out;
+        }
+
+        a {
+            color: var(--color-text);
+            text-decoration: none;
+            transition: opacity 0.3s ease;
+        }
+
+        a:hover {
+            opacity: 0.4;
+        }
+
+        /* Header */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 50px;
+            position: fixed;
+            top: 15px; /* 額縁の内側に配置 */
+            left: 15px;
+            right: 15px;
+            background-color: rgba(253, 252, 251, 0.95);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            z-index: 100;
+            animation: slideDown 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .header-logo {
+            font-family: var(--font-serif);
+            font-size: 20px;
+            letter-spacing: 0.1em;
+            font-weight: 400;
+        }
+        
+        .header-logo a {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-logo img {
+            max-height: 24px; /* ロゴ画像の高さを調整 */
+            width: auto;
+            display: block;
+        }
+
+        .header-nav {
+            display: flex;
+            gap: 50px;
+        }
+
+        .header-nav a {
+            position: relative;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            opacity: 1; /* override base link hover */
+        }
+
+        .header-nav a:hover {
+            opacity: 1;
+        }
+
+        .header-nav a::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 1px;
+            bottom: -6px;
+            left: 0;
+            background-color: var(--color-accent);
+            transform: scaleX(0);
+            transform-origin: bottom right;
+            transition: transform 0.4s cubic-bezier(0.86, 0, 0.07, 1);
+        }
+
+        .header-nav a:hover::after {
+            transform: scaleX(1);
+            transform-origin: bottom left;
+        }
+
+        /* Mobile Menu Button */
+        .mobile-menu-btn {
+            display: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 30px;
+            height: 20px;
+            position: relative;
+            z-index: 101;
+        }
+        .mobile-menu-btn span {
+            display: block;
+            width: 100%;
+            height: 1px;
+            background-color: var(--color-text);
+            position: absolute;
+            transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1), top 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .mobile-menu-btn span:first-child { top: 4px; }
+        .mobile-menu-btn span:last-child { top: 14px; }
+        .mobile-menu-btn.is-active span:first-child { transform: rotate(45deg); top: 9px; }
+        .mobile-menu-btn.is-active span:last-child { transform: rotate(-45deg); top: 9px; }
+
+        /* Hero */
+        .hero {
+            min-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            padding-top: 80px; /* Header offset */
+            margin-bottom: 80px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        /* Watermark Text */
+        .hero-watermark {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: clamp(100px, 20vw, 300px);
+            font-weight: 400;
+            color: rgba(0, 0, 0, 0.02);
+            white-space: nowrap;
+            z-index: 1; /* 看板の後ろに透けるように配置 */
+        }
+
+        .hero-title {
+            font-size: clamp(40px, 6vw, 90px); /* フレームに収まるよう少し調整 */
+            font-weight: 400;
+            letter-spacing: 0.02em;
+            line-height: 1.2;
+            opacity: 0;
+            
+            /* ゴージャスなシャインエフェクト用の背景設定 */
+            background: linear-gradient(
+                120deg,
+                var(--color-text) 35%,
+                var(--color-accent) 45%, /* シャンパンゴールド風の光 */
+                #FFFFFF 50%,
+                var(--color-accent) 55%,
+                var(--color-text) 65%
+            );
+            background-size: 200% auto;
+            color: transparent;
+            -webkit-background-clip: text;
+            background-clip: text;
+
+            animation: 
+                cinematicReveal 2.8s cubic-bezier(0.16, 1, 0.3, 1) forwards,
+                textShine 5s cubic-bezier(0.2, 0.8, 0.2, 1) 0.5s forwards;
+        }
+        
+        .hero-dot {
+            margin: 30px 0;
+            font-size: 10px;
+            color: var(--color-text);
+            opacity: 0;
+            animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.3s forwards;
+        }
+
+        .hero-subtitle {
+            font-family: var(--font-sans-jp);
+            font-size: 11px;
+            font-weight: 300;
+            letter-spacing: 0.25em;
+            color: var(--color-muted);
+            opacity: 0;
+            animation: revealText 1.4s cubic-bezier(0.16, 1, 0.3, 1) 0.5s forwards;
+        }
+        
+        .scroll-indicator {
+            position: absolute;
+            bottom: 40px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+            opacity: 0;
+            animation: fadeUp 1s ease 1s forwards;
+        }
+        
+        .scroll-text {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            letter-spacing: 0.2em;
+            text-align: center;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            line-height: 1.6;
+        }
+        
+        .scroll-text strong {
+            display: block;
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 32px;
+            font-weight: 400;
+            color: var(--color-text);
+            margin: 4px 0 2px 0;
+            letter-spacing: 0;
+            transition: opacity 0.2s ease;
+        }
+        
+        .scroll-line {
+            width: 1px;
+            height: 60px;
+            background-color: var(--color-muted);
+            animation: scrollLine 2s cubic-bezier(0.645, 0.045, 0.355, 1) infinite;
+        }
+
+        /* Toolbar (Sticky Filter) */
+        .toolbar-wrapper {
+            position: sticky;
+            top: 100px; /* Header Height */
+            z-index: 99;
+            background-color: rgba(253, 252, 251, 0.85);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--color-border);
+            border-top: 1px solid var(--color-border);
+            padding: 16px 60px;
+            margin-bottom: 60px;
+            opacity: 0;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) 0.8s forwards;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 40px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .toolbar-search {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            width: 280px;
+            padding: 10px 20px;
+            background-color: rgba(0, 0, 0, 0.03);
+            border: 1px solid transparent;
+            border-radius: 30px;
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .toolbar-search:focus-within {
+            background-color: var(--color-bg);
+            border-color: var(--color-accent);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.06);
+            transform: translateY(-2px);
+        }
+
+        .toolbar-search input {
+            border: none;
+            background: transparent;
+            font-family: var(--font-sans-jp);
+            font-size: 11px;
+            color: var(--color-text);
+            width: 100%;
+            outline: none;
+        }
+        .toolbar-search input::placeholder {
+            color: var(--color-muted);
+        }
+
+        .toolbar-search .search-icon {
+            display: flex;
+            align-items: center;
+            color: var(--color-muted);
+            transition: color 0.4s ease;
+        }
+
+        .toolbar-search:focus-within .search-icon {
+            color: var(--color-text);
+        }
+
+        .toolbar-filters {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .toolbar-select {
+            appearance: none;
+            -webkit-appearance: none;
+            border: 1px solid var(--color-border);
+            border-radius: 30px;
+            background: transparent;
+            padding: 10px 36px 10px 20px;
+            font-family: var(--font-sans-jp);
+            font-size: 11px;
+            color: var(--color-text);
+            cursor: pointer;
+            outline: none;
+            background-image: url('data:image/svg+xml;utf8,<svg fill="%232C2C2C" height="12" viewBox="0 0 24 24" width="12" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/><path d="M0 0h24v24H0z" fill="none"/></svg>');
+            background-repeat: no-repeat;
+            background-position: right 14px center;
+            transition: border-color 0.3s ease;
+        }
+        .toolbar-select:hover, .toolbar-select:focus {
+            border-color: var(--color-accent);
+        }
+
+        .toolbar-or {
+            font-family: var(--font-sans);
+            font-size: 9px;
+            color: var(--color-muted);
+            letter-spacing: 0.2em;
+        }
+
+        .toolbar-tag-wrapper {
+            position: relative;
+        }
+
+        .toolbar-tag-btn {
+            border: 1px dashed var(--color-muted);
+            border-radius: 30px;
+            background: transparent;
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--color-text);
+            padding: 10px 24px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .toolbar-tag-btn:hover {
+            background-color: var(--color-accent);
+            color: var(--color-text);
+            border-style: solid;
+            border-color: var(--color-accent);
+        }
+
+        .tag-dropdown {
+            position: absolute;
+            top: calc(100% + 16px);
+            left: 0;
+            background: var(--color-bg);
+            border: 1px solid var(--color-border);
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.08);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            width: 320px;
+            opacity: 0;
+            visibility: hidden;
+            transform: translateY(-10px);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            z-index: 100;
+        }
+        .tag-dropdown.is-open {
+            opacity: 1;
+            visibility: visible;
+            transform: translateY(0);
+        }
+        .tag-option {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--color-text);
+            background: rgba(0,0,0,0.03);
+            padding: 8px 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+        .tag-option:hover, .tag-option.is-active {
+            background: var(--color-accent);
+            color: var(--color-text);
+        }
+
+        .toolbar-count {
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+            color: var(--color-muted);
+            display: flex;
+            align-items: center;
+        }
+        .toolbar-count span {
+            font-family: var(--font-serif);
+            font-style: italic;
+            font-size: 24px;
+            color: var(--color-text);
+            margin-right: 6px;
+            transition: opacity 0.2s ease;
+        }
+
+        /* Gallery Grid */
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 80px 40px;
+            padding: 0 60px 160px;
+            max-width: 1800px;
+            margin: 0 auto;
+        }
+
+        .gallery-item {
+            text-decoration: none;
+            display: block;
+            opacity: 0;
+            transform: translateY(60px) scale(0.95);
+            filter: blur(10px);
+            transition: opacity 1.5s cubic-bezier(0.16, 1, 0.3, 1), 
+                        transform 1.5s cubic-bezier(0.16, 1, 0.3, 1),
+                        filter 1.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item.is-visible {
+            opacity: 1;
+            transform: translateY(0) scale(1);
+            filter: blur(0);
+        }
+
+        .item-image {
+            aspect-ratio: 3 / 4;
+            overflow: hidden;
+            background-color: #F5F5F5;
+            margin-bottom: 20px;
+            /* 額縁マット風デザイン */
+            border: 12px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 10px 30px rgba(0,0,0,0.05);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .item-image::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 内側の影でマットの厚み（奥行き）を表現 */
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.08);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), filter 1.4s ease;
+        }
+
+        .gallery-item:hover .item-image img {
+            transform: scale(1.1) rotate(-1.5deg);
+            filter: brightness(0.85);
+        }
+
+        /* Museum Caption Style */
+        .item-info {
+            padding-top: 16px;
+            position: relative;
+        }
+
+        /* ホバー時のドローイングライン */
+        .item-info::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--color-border);
+        }
+
+        .item-info::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 1px;
+            background-color: var(--color-text);
+            transform: scaleX(0);
+            transform-origin: left;
+            transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .gallery-item:hover .item-info::after {
+            transform: scaleX(1);
+        }
+
+        /* テキストのスタッガー（時間差）出現アニメーション */
+        .item-info > * {
+            opacity: 0;
+            transform: translateY(10px);
+            transition: opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        /* マウスが外れた時（消える時）の遅延設定 */
+        .item-info > *:nth-child(1) { transition-delay: 0.2s; }
+        .item-info > *:nth-child(2) { transition-delay: 0.15s; }
+        .item-info > *:nth-child(3) { transition-delay: 0.1s; }
+        .item-info > *:nth-child(4) { transition-delay: 0.05s; }
+        .item-info > *:nth-child(7) { transition-delay: 0s; }
+
+        .gallery-item:hover .item-info > * {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* マウスが乗った時（現れる時）の遅延設定 */
+        .gallery-item:hover .item-info > *:nth-child(1) { transition-delay: 0.05s; }
+        .gallery-item:hover .item-info > *:nth-child(2) { transition-delay: 0.1s; }
+        .gallery-item:hover .item-info > *:nth-child(3) { transition-delay: 0.15s; }
+        .gallery-item:hover .item-info > *:nth-child(4) { transition-delay: 0.2s; }
+        .gallery-item:hover .item-info > *:nth-child(7) { transition-delay: 0.25s; }
+
+        /* スマートフォン等のホバーがない端末用 */
+        @media (hover: none) {
+            .item-info > * {
+                opacity: 1;
+                transform: translateY(0);
+                transition-delay: 0s !important;
+            }
+            .item-info::after {
+                transform: scaleX(1);
+            }
+        }
+
+        .item-tag {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--color-muted);
+            margin-bottom: 10px;
+        }
+
+        .item-title {
+            font-family: var(--font-serif);
+            font-size: 16px;
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            margin-bottom: 8px;
+        }
+
+        .item-subtitle {
+            font-family: var(--font-sans-jp);
+            font-size: 11px;
+            color: var(--color-muted);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            margin-bottom: 6px;
+        }
+
+        .item-meta {
+            font-family: var(--font-sans-jp);
+            font-size: 9px;
+            color: var(--color-muted);
+            margin-bottom: 8px;
+            line-height: 1.6;
+        }
+
+        .item-meta span {
+            display: block;
+        }
+
+        .item-price {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            color: var(--color-text);
+            letter-spacing: 0.05em;
+            margin-top: 16px;
+            padding-top: 12px;
+            border-top: 1px dashed var(--color-border);
+            display: inline-block;
+        }
+
+        /* Item Page (Details) */
+        .item-page-wrapper {
+            max-width: 1400px;
+            margin: 140px auto 160px;
+            padding: 0 60px;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 40px;
+            font-family: var(--font-sans);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--color-muted);
+            text-transform: uppercase;
+            transition: color 0.3s ease, transform 0.3s ease;
+        }
+
+        .back-link:hover {
+            color: var(--color-text);
+            transform: translateX(-5px);
+            opacity: 1; /* override a:hover opacity */
+        }
+
+        .item-page {
+            display: flex;
+            gap: 100px; /* 美術館のようなゆったりとした余白 */
+            align-items: flex-start;
+            margin-bottom: 120px;
+        }
+
+        .item-gallery {
+            flex: 1.2;
+            min-width: 0;
+        }
+
+        .item-main-image {
+            aspect-ratio: 3 / 4;
+            width: 100%;
+            background-color: #F5F5F5;
+            margin-bottom: 16px;
+            overflow: hidden;
+            /* 額縁マット風デザイン */
+            border: 24px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 15px 40px rgba(0,0,0,0.06);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .item-main-image::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 内側の影でマットの厚み（奥行き）を表現 */
+            box-shadow: inset 0 0 12px rgba(0,0,0,0.08);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .item-main-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: opacity 0.4s ease;
+        }
+
+        .related-works {
+            border-top: 1px solid var(--color-border);
+            padding-top: 80px;
+        }
+
+        .related-title {
+            font-family: var(--font-serif);
+            font-size: 14px;
+            letter-spacing: 0.05em;
+            margin-bottom: 30px;
+            color: var(--color-text);
+            position: relative;
+            padding-bottom: 12px;
+        }
+
+        .related-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 30px;
+            height: 2px;
+            background-color: var(--color-accent);
+        }
+
+        .related-list {
+            display: flex;
+            gap: 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            padding-bottom: 10px;
+        }
+
+        .related-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .related-item {
+            width: calc(25% - 12px);
+            flex-shrink: 0;
+            display: block;
+            text-decoration: none;
+        }
+
+        .related-item-image {
+            aspect-ratio: 3 / 4;
+            background-color: #F5F5F5;
+            overflow: hidden;
+            margin-bottom: 12px;
+            /* 額縁マット風デザイン */
+            border: 8px solid var(--color-bg);
+            box-shadow: 0 0 0 1px var(--color-border), 0 5px 15px rgba(0,0,0,0.04);
+            box-sizing: border-box;
+            position: relative;
+        }
+
+        .related-item-image::after {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            /* 内側の影でマットの厚み（奥行き）を表現 */
+            box-shadow: inset 0 0 6px rgba(0,0,0,0.08);
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .related-item-title {
+            font-family: var(--font-serif);
+            font-size: 11px;
+            color: var(--color-text);
+            letter-spacing: 0.05em;
+            display: block;
+            text-align: center;
+            opacity: 0.7;
+            transition: opacity 0.3s ease;
+        }
+
+        .related-item:hover .related-item-title {
+            opacity: 1;
+        }
+
+        .item-details {
+            flex: 1;
+            position: sticky;
+            top: 140px;
+        }
+
+        .item-page-title {
+            font-family: var(--font-serif);
+            font-size: 40px; /* タイトルを少し大きくして印象的に */
+            font-weight: 400;
+            letter-spacing: 0.03em;
+            margin-bottom: 24px;
+            position: relative;
+            padding-bottom: 16px;
+            line-height: 1.3;
+        }
+
+        .item-page-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-accent);
+        }
+
+        .item-page-subtitle {
+            font-family: var(--font-sans-jp);
+            font-size: 13px;
+            color: var(--color-muted);
+            font-weight: 300;
+            letter-spacing: 0.08em;
+            margin-bottom: 24px;
+        }
+
+        .item-page-meta {
+            font-family: var(--font-sans-jp);
+            font-size: 11px;
+            color: var(--color-muted);
+            margin-bottom: 24px;
+            line-height: 1.8;
+            letter-spacing: 0.05em;
+        }
+
+        .item-page-meta span {
+            display: block;
+        }
+
+        .item-page-price {
+            font-family: var(--font-sans);
+            font-size: 20px;
+            color: var(--color-text);
+            letter-spacing: 0.05em;
+            margin-bottom: 40px;
+        }
+
+        /* BASE Item Select Tag & Cart Button */
+        .item-page form select {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 16px 20px;
+            margin-bottom: 24px;
+            background-color: transparent;
+            border: 1px solid var(--color-border);
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 0.1em;
+            color: var(--color-text);
+            border-radius: 0;
+            cursor: pointer;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        .item-page form select:focus {
+            border-color: var(--color-text);
+        }
+
+        .cart-btn-wrapper input[type="submit"],
+        .cart-btn-wrapper button {
+            appearance: none;
+            -webkit-appearance: none;
+            width: 100%;
+            padding: 20px;
+            background-color: transparent;
+            color: var(--color-text);
+            border: 1px solid var(--color-text);
+            font-family: var(--font-sans);
+            font-size: 12px;
+            letter-spacing: 0.15em;
+            text-transform: uppercase;
+            cursor: pointer;
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            border-radius: 0;
+            margin-bottom: 60px;
+            display: block;
+            text-align: center;
+        }
+
+        .cart-btn-wrapper input[type="submit"]:hover,
+        .cart-btn-wrapper button:hover {
+            background-color: var(--color-text);
+            color: var(--color-bg);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .item-description {
+            font-family: var(--font-sans-jp);
+            font-size: 13px;
+            line-height: 2.4;
+            letter-spacing: 0.08em;
+            color: var(--color-text);
+            border-top: 1px solid var(--color-border);
+            padding-top: 40px;
+        }
+
+        .item-page-tags {
+            margin-top: 30px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+        }
+
+        .item-page-tags .tag {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.15em;
+            color: var(--color-muted);
+            text-transform: uppercase;
+        }
+
+        .item-page-tags .tag::before {
+            content: '#';
+            margin-right: 2px;
+        }
+
+        /* Cart Button States */
+        .cart-btn-wrapper button.is-adding,
+        .cart-btn-wrapper input[type="submit"].is-adding {
+            background-color: transparent !important;
+            color: var(--color-text) !important;
+            opacity: 0.5;
+            pointer-events: none;
+        }
+
+        .cart-btn-wrapper button.is-added,
+        .cart-btn-wrapper input[type="submit"].is-added {
+            background-color: var(--color-text) !important;
+            color: var(--color-bg) !important;
+            pointer-events: none;
+        }
+
+        /* Toast Notification */
+        .toast-notification {
+            position: fixed;
+            bottom: 40px;
+            right: 40px;
+            background-color: var(--color-bg);
+            border: 1px solid var(--color-border);
+            border-left: 4px solid var(--color-accent);
+            padding: 24px 32px;
+            display: flex;
+            align-items: center;
+            gap: 40px;
+            z-index: 1000;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            pointer-events: none;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+        }
+
+        .toast-notification.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+            pointer-events: auto;
+        }
+
+        .related-item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            transition: transform 1.4s cubic-bezier(0.16, 1, 0.3, 1), filter 1.4s ease;
+        }
+        .related-item:hover .related-item-image img {
+            transform: scale(1.1) rotate(-1.5deg);
+            filter: brightness(0.85);
+        }
+
+        .toast-info {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .toast-title {
+            font-family: var(--font-serif);
+            font-size: 14px;
+            letter-spacing: 0.05em;
+        }
+
+        .toast-message {
+            font-family: var(--font-sans);
+            font-size: 10px;
+            letter-spacing: 0.1em;
+            color: var(--color-muted);
+            text-transform: uppercase;
+        }
+
+        .toast-action {
+            font-family: var(--font-sans);
+            font-size: 11px;
+            letter-spacing: 0.15em;
+            color: var(--color-text);
+            text-decoration: underline;
+            text-underline-offset: 4px;
+        }
+        
+        /* About Page & Contact Page */
+        .about-page {
+            max-width: 800px;
+            margin: 140px auto 160px;
+            padding: 0 60px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .about-header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        .about-title {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+            padding-bottom: 15px;
+        }
+
+        .about-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-accent);
+        }
+
+        .about-logo {
+            display: block;
+            margin: 0 auto 40px;
+            max-height: 120px;
+            max-width: 100%;
+        }
+
+        .about-content {
+            width: 100%;
+        }
+
+        .about-text {
+            font-family: var(--font-sans-jp);
+            font-size: 13px;
+            line-height: 2.2;
+            letter-spacing: 0.1em;
+            color: var(--color-muted);
+            text-align: center;
+        }
+
+        .contact-page {
+            max-width: 800px;
+            margin: 140px auto 160px;
+            padding: 0 60px;
+            animation: fadeUp 1.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .contact-title {
+            font-family: var(--font-serif);
+            font-size: 32px;
+            text-align: center;
+            margin-bottom: 60px;
+            letter-spacing: 0.05em;
+            position: relative;
+            display: inline-block;
+            width: 100%;
+            padding-bottom: 15px;
+        }
+
+        .contact-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 40px;
+            height: 2px;
+            background-color: var(--color-accent);
+        }
+
+        .contact-form {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+
+        /* --- Dev Preview Only --- */
+        #dev-item-page, #dev-about-page, #dev-contact-page {
+            display: none;
+        }
+        /* --- End Dev Preview --- */
+
+        /* Responsive */
+        @media (max-width: 900px) {
+            .item-page-wrapper {
+                margin-top: 100px;
+                padding: 0 30px;
+            }
+            .item-page {
+                flex-direction: column;
+                gap: 50px;
+                margin-bottom: 80px;
+            }
+            .about-page {
+                margin-top: 100px;
+                padding: 0 30px;
+            }
+            .contact-page {
+                margin-top: 100px;
+                padding: 0 30px;
+            }
+        }
+
+        @media (max-width: 1024px) {
+            .toolbar-wrapper {
+                padding: 12px 40px;
+            }
+            .gallery {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 60px 30px;
+                padding: 0 40px 100px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            body::before { border-width: 10px; }
+            .header {
+                padding: 20px 24px;
+                top: 10px; left: 10px; right: 10px;
+            }
+            .toolbar-wrapper {
+                top: 74px;
+                padding: 12px 20px;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+                scrollbar-width: none;
+            }
+            .toolbar-wrapper::-webkit-scrollbar {
+                display: none;
+            }
+            .toolbar {
+                min-width: 700px;
+                gap: 20px;
+                justify-content: flex-start;
+            }
+            .toolbar-search {
+                width: 240px;
+            }
+            .mobile-menu-btn {
+                display: block;
+            }
+            .header-nav {
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100vh;
+                background-color: rgba(28, 27, 24, 0.98); /* スマホメニューは黒背景に */
+                flex-direction: column;
+                justify-content: center;
+                align-items: center;
+                gap: 40px;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            }
+            .header-nav.is-active {
+                opacity: 1;
+                pointer-events: auto;
+            }
+            .header-nav a {
+                font-size: 14px;
+                color: var(--color-bg);
+            }
+            .gallery {
+                padding: 0 20px 80px;
+                gap: 40px 15px;
+            }
+            .hero::after {
+                width: 60%;
+                clip-path: polygon(20% 0, 100% 0, 100% 100%, 0 100%);
+            }
+            .hero-signboard {
+                padding: 60px 20px;
+                margin: 0 20px;
+                width: calc(100% - 40px);
+                box-sizing: border-box;
+            }
+            .hero-signboard::before { left: 10%; }
+            .hero-signboard::after { right: 10%; }
+            
+            .toast-notification {
+                bottom: 20px;
+                right: 20px;
+                left: 20px;
+                padding: 20px 24px;
+                justify-content: space-between;
+                gap: 20px;
+            }
+            .item-page-wrapper {
+                padding: 0 20px;
+            }
+            .item-page-title {
+                font-size: 24px;
+            }
+            /* スマホの時はメイン画像のマット幅を少し狭く調整 */
+            .item-main-image {
+                border-width: 12px;
+            }
+            footer { margin: 0 20px !important; }
+            .cart-btn-wrapper input[type="submit"],
+            .cart-btn-wrapper button {
+                padding: 16px;
+            }
+            .scroll-text {
+                font-size: 10px;
+            }
+            .scroll-text strong {
+                font-size: 28px;
+            }
+            .toolbar-count {
+                font-size: 11px;
+            }
+            .toolbar-count span {
+                font-size: 20px;
+            }
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 40px 0;
+            margin: 0 60px;
+            border-top: 1px solid var(--color-border);
+            position: relative;
+        }
+
+        footer::before {
+            content: '';
+            position: absolute;
+            top: -1px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 60px;
+            height: 1px;
+            background-color: var(--color-accent);
+        }
+
+        footer p {
+            font-size: 12px;
+            color: var(--color-muted);
+            font-family: var(--font-sans);
+            letter-spacing: 0.1em;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="header-logo"><a href="#"><img src="images/Logo.png" alt="YAGOTO ART GALLERY"></a></div>
+        <nav class="header-nav">
+            <a href="#">GALLERY</a>
+            <a href="#">ABOUT US</a>
+            <a href="#">CONNECT</a>
+        </nav>
+        <button class="mobile-menu-btn" aria-label="Menu">
+            <span></span>
+            <span></span>
+        </button>
+    </header>
+
+    <main>
+        <div id="dev-index-page">
+        <div style="display: none;">{block:IndexPage}</div>
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-watermark">GALLERY</div>
+            <div class="hero-signboard">
+                <h1 class="hero-title">YAGOTO<br>ART GALLERY</h1>
+                <div class="hero-dot">•</div>
+                <p class="hero-subtitle">ひとつひとつの作品とゆっくり向き合うための場所</p>
+            </div>
+            <div class="scroll-indicator">
+                <span class="scroll-text">Collection<strong>193</strong>Items</span>
+                <span class="scroll-line"></span>
+            </div>
+        </section>
+
+        <!-- Toolbar Area -->
+        <div class="toolbar-wrapper">
+            <section class="toolbar">
+                <div class="toolbar-search">
+                    <span class="search-icon">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+                    </span>
+                    <input type="text" placeholder="タイトル、説明、タグで検索...">
+                </div>
+                <div class="toolbar-filters">
+                    <select class="toolbar-select">
+                        <option>すべての状態</option>
+                        <option>販売中</option>
+                        <option>展示のみ</option>
+                    </select>
+                    <select class="toolbar-select">
+                        <option>新着順</option>
+                        <option>価格が安い順</option>
+                        <option>価格が高い順</option>
+                    </select>
+                    <span class="toolbar-or">OR</span>
+                    <div class="toolbar-tag-wrapper">
+                        <button class="toolbar-tag-btn">+ Tag</button>
+                        <div class="tag-dropdown">
+                            <span class="tag-option" data-tag="抽象"># 抽象</span>
+                            <span class="tag-option" data-tag="モダン"># モダン</span>
+                            <span class="tag-option" data-tag="ポップアート"># ポップアート</span>
+                            <span class="tag-option" data-tag="Moon"># MOON</span>
+                            <span class="tag-option" data-tag="Ocean"># OCEAN</span>
+                            <span class="tag-option" data-tag="Cat"># CAT</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="toolbar-count">
+                    <span>193</span> items
+                </div>
+            </section>
+        </div>
+
+        <!-- Gallery Grid -->
+        <section class="gallery">
+            <span style="display: none;">{block:Items}</span>
+            <a href="{ItemPageURL}" class="gallery-item">
+                <div class="item-image">
+                    <img src="{ItemImageURL}" alt="{ItemTitle}" loading="lazy">
+                </div>
+                <div class="item-info">
+                    <span class="item-tag">ARTWORK</span>
+                    <h2 class="item-title">{ItemTitle}</h2>
+                    <p class="item-subtitle">作品サブタイトル</p>
+                    <div class="item-meta">
+                        <span>ID: K000X</span>
+                        <span>Status: Public</span>
+                    </div>
+                    <div class="item-desc-hidden" style="display:none;">{ItemDetail}</div>
+                    <div class="item-tags-hidden" style="display:none;">
+                        <span class="tag">Artwork</span>
+                    </div>
+                    <p class="item-price">{ItemPrice}</p>
+                </div>
+            </a>
+            <span style="display: none;">{/block:Items}</span>
+        </section>
+        <div style="display: none;">{/block:IndexPage}</div>
+        </div>
+
+        <div id="dev-item-page">
+        <div style="display: none;">{block:ItemPage}</div>
+        <div class="item-page-wrapper">
+            <a href="#" class="back-link" id="dev-back-link">← BACK TO GALLERY</a>
+            <section class="item-page">
+                <div class="item-gallery">
+                    <div class="item-main-image">
+                        <img id="main-image" src="{ItemImageURL}" onerror="this.onerror=null; this.src='images/K0001_「琥珀色の時間」 (Amber Time)_a0001_a1.jpg';" alt="Artwork">
+                    </div>
+                </div>
+                <div class="item-details">
+                    <h1 class="item-page-title">{ItemTitle}</h1>
+                    <p class="item-page-subtitle">日本語タイトル</p>
+                    <div class="item-page-meta">
+                        <span>ID: K0001</span>
+                        <span>Status: Public</span>
+                    </div>
+                    <p class="item-page-price">{ItemPrice}</p>
+                    
+                    <form action="{ItemCartAction}" method="post">
+                        {ItemSelectTag}
+                        <div class="cart-btn-wrapper">
+                            {ItemAddCart}
+                        </div>
+                    </form>
+
+                    <div class="item-description">
+                        {ItemDetail}
+                    </div>
+                    <div class="item-page-tags">
+                        <span class="tag">Artwork</span>
+                    </div>
+                </div>
+            </section>
+            <div class="related-works">
+                <h3 class="related-title">RELATED WORKS</h3>
+                <div class="related-list">
+                    <!-- プレビュー環境では JS で自動生成されます -->
+                </div>
+            </div>
+        </div>
+        <div style="display: none;">{/block:ItemPage}</div>
+        </div>
+
+        <div id="dev-about-page">
+        <div style="display: none;">{block:AboutPage}</div>
+        <section class="about-page">
+            <div class="about-header">
+                <img src="images/Logo.png" alt="YAGOTO ART GALLERY" class="about-logo">
+                <h1 class="about-title">ABOUT US</h1>
+            </div>
+            <div class="about-content">
+                <div class="about-text">
+                    {ShopIntroduction}
+                </div>
+            </div>
+        </section>
+        <div style="display: none;">{/block:AboutPage}</div>
+        </div>
+
+        <div id="dev-contact-page">
+        <div style="display: none;">{block:ContactPage}</div>
+        <section class="contact-page">
+            <h1 class="contact-title">CONNECT</h1>
+            <form action="" class="contact-form">
+                <input type="text" class="contact-input" placeholder="Name" required>
+                <input type="email" class="contact-input" placeholder="Email" required>
+                <textarea class="contact-input contact-textarea" placeholder="Message" required></textarea>
+                <div class="cart-btn-wrapper">
+                    <button type="submit" onclick="event.preventDefault(); alert('メッセージを送信しました（プレビュー用機能）');">SEND MESSAGE</button>
+                </div>
+            </form>
+        </section>
+        <div style="display: none;">{/block:ContactPage}</div>
+        </div>
+    </main>
+
+    <footer>
+        <p>&copy; 2024 YAGOTO ART GALLERY. All rights reserved.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            // --- Dev Preview Only (Dummy Data Generation) ---
+            // プレビューテスト用のダミーデータ。実際の運用時にはこの部分は不要です。
+            const dummyData = [
+                {
+                    id: 'K0001', img: 'images/K0001_「琥珀色の時間」 (Amber Time)_a0001_a1.jpg', title: 'Amber Time', subtitle: '琥珀色の時間',
+                    desc: 'ふたりで過ごす静かな夜。琥珀色の光に包まれて大切な人と心を通わせる贅沢な時間を描きました。<br>モダンな北欧風デザインが魅力。温かみのあるオレンジと青の対比が、リビングを上質な空間に変えてくれます。',
+                    tags: ['デザイン ','人物 ','モダン ','リビング ','カフェ'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0002', img: 'images/K0002_「月光の森」 (Moonlit Forest)_a0002_a1.jpg', title: 'Moonlit Forest', subtitle: '月光の森',
+                    desc: '月明かりが彩るモダンな森。静かな夜の空気感をお部屋に飾って、癒やしの時間を過ごしませんか。<br>抽象的な図形で描く幻想的な夜。北欧風インテリアやモダンな空間に映える、美しく鮮やかな色彩です。',
+                    tags: ['抽象 ','風景 ','自然 ','星空 ','寝室'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0003', img: 'images/K0003_「未来への視座」 (Perspective on the Future)_a0003_a1.jpg', title: 'Moonlit Forest', subtitle: '未来への視座',
+                    desc: '視点を変えれば新しい景色が広がる。未来を見つめるあなたの背中を、優しく後押しする一枚です。<br>重なり合う色彩は無限の可能性の象徴。洗練された抽象デザインが、日常に未来へのインスピレーションを届けます。',
+                    tags: ['抽象 ','デザイン ','幾何学 ','未来 ','オフィス'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0004', img: 'images/K0004_「三画の連なり」 (Trio of Peaks)_a0004_a1.jpg', title: 'Trio of Peaks', subtitle: '三画の連なり',
+                    desc: '重なり合う三つの頂がもたらす安定と調和をテーマにした抽象画です。<br>秩序と情熱が混ざり合う抽象美。色と形が響き合う瞬間を切り取った、感性を刺激するデザインインテリア。',
+                    tags: ['抽象 ','デザイン ','幾何学 ','ポスター ','オフィス'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0005', img: 'images/K0005_「色彩の遊戯」 (Play of Colors)_a0005_a1.jpg', title: 'Play of Colors', subtitle: '色彩の遊戯',
+                    desc: '重なり合う色と形が心地よいリズムを生みます。眺めるだけで心が整い、前向きになれる一枚です。<br>絶妙な色彩がリズムを奏でる幾何学アート。飾るだけで空間に温かさと知的な遊び心を添えます。',
+                    tags: ['抽象 ','デザイン ','幾何学 ','リビング ','パターン'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0006', img: 'images/K0006_「都会の夜明け」 (Urban Dawn)_a0006_a1.jpg', title: 'Urban Dawn', subtitle: '都会の夜明け',
+                    desc: '新しい一日がビルを染めていく。朝の静寂と光の力強さを、あなたのお部屋に迎えてみませんか。<br>幾何学模様と暖色が調和した抽象画。モダンなインテリアのアクセントに、都会的な夜明けの風景を。',
+                    tags: ['都市 ','抽象 ','デザイン ','幾何学 ','オフィス'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0007', img: 'images/K0007_「静かなる均衡」 (Silent Equilibrium)_a0007_a1.jpg', title: 'Silent Equilibrium', subtitle: '静かなる均衡',
+                    desc: '重なり合う色と形に秩序が宿る。そんな「心の平穏」を形にした一枚が、あなたの日常を優しく整えます。<br>計算された色彩の重なりが生む、モダンな静寂。心地よいリズム感が、空間をワンランク上の癒しへ導きます。',
+                    tags: ['抽象 ','デザイン ','幾何学 ','ミニマル ','書斎'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0008', img: 'images/K0008_「群青の航跡」 (Deep Blue Wake)_a0008_a1.jpg', title: 'Deep Blue Wake', subtitle: '群青の航跡',
+                    desc: '海の静寂に溶け込む鮮やかな魚たち。あなたの部屋を深い癒やしと冒険心で満たしてくれます。<br>幾何学模様で描く海のモダンアート。北欧風のインテリアやリビングのアクセントに最適な一枚です。',
+                    tags: ['デザイン ','幾何学 ','自然 ','動物 ','こども部屋'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0009', img: 'images/K0009_「夕刻の帆走」 (Evening Sail)＿a0009_a1.jpg', title: 'Evening Sail', subtitle: '夕刻の帆走',
+                    desc: '夕日の光を帆いっぱいに受けて進む姿に勇気をもらえます。お部屋に温かな希望を飾りませんか。<br>モダンな幾何学模様で描く夕暮れの海。北欧風インテリアやリビングのアクセントに最適なアートです。',
+                    tags: ['デザイン ','幾何学 ','リビング ','風景 ','自然'],
+                    price: '¥50,000'
+                },
+                {
+                    id: 'K0010', img: 'images/K0010_「猫とコーヒーの時間」 (Cat & Coffee Time)a0010_a1 (1).jpg', title: 'Cat & Coffee Time', subtitle: '猫とコーヒーの時間',
+                    desc: '窓から差す光に包まれて。お気に入りの一杯と愛猫に癒やされる特別な時間をあなたに。<br>北欧モダンな色彩で描く猫のアート。リビングを彩る温かなインテリアのアイデアに。',
+                    tags: ['デザイン ','幾何学 ','リラックス ','カフェ ','動物'],
+                    price: '¥50,000'
+                }
+            ];
+            
+            // プレビュー環境であれば、ギャラリーと関連商品を自動生成する
+            if (document.getElementById('dev-index-page')) {
+                const gallerySection = document.querySelector('.gallery');
+                if (gallerySection) {
+                    gallerySection.innerHTML = '';
+                    dummyData.forEach(item => {
+                        const tagsHtml = item.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+                        const html = `
+                            <a href="detail.html" class="gallery-item">
+                                <div class="item-image">
+                                    <img src="${item.img}" alt="${item.title}" loading="lazy">
+                                </div>
+                                <div class="item-info">
+                                    <span class="item-tag">ARTWORK</span>
+                                    <h2 class="item-title">${item.title}</h2>
+                                    <p class="item-subtitle">${item.subtitle}</p>
+                                    <div class="item-meta">
+                                        <span>ID: ${item.id}</span>
+                                        <span>Status: Public</span>
+                                    </div>
+                                    <div class="item-desc-hidden" style="display:none;">${item.desc}</div>
+                                    <div class="item-tags-hidden" style="display:none;">${tagsHtml}</div>
+                                    <p class="item-price">${item.price}</p>
+                                </div>
+                            </a>
+                        `;
+                        gallerySection.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+                
+                const relatedList = document.querySelector('.related-list');
+                if (relatedList) {
+                    relatedList.innerHTML = '';
+                    // ダミーデータからランダムに4つ抽出して表示
+                    const shuffled = [...dummyData].sort(() => 0.5 - Math.random());
+                    shuffled.slice(0, 4).forEach(item => {
+                        const html = `
+                            <a href="detail.html" class="related-item">
+                                <div class="related-item-image">
+                                    <img src="${item.img}" alt="Related Work">
+                                </div>
+                                <span class="related-item-title">${item.title}</span>
+                                <div class="item-desc-hidden" style="display:none;">${item.desc}</div>
+                                <div class="item-tags-hidden" style="display:none;">
+                                    ${item.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}
+                                </div>
+                            </a>
+                        `;
+                        relatedList.insertAdjacentHTML('beforeend', html);
+                    });
+                }
+            }
+            // --- End Dummy Data Generation ---
+
+            // Mobile Menu
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+            const headerNav = document.querySelector('.header-nav');
+            
+            if (menuBtn && headerNav) {
+                menuBtn.addEventListener('click', () => {
+                    menuBtn.classList.toggle('is-active');
+                    headerNav.classList.toggle('is-active');
+                    document.body.style.overflow = headerNav.classList.contains('is-active') ? 'hidden' : '';
+                });
+
+                const navLinks = headerNav.querySelectorAll('a');
+                navLinks.forEach(link => {
+                    link.addEventListener('click', () => {
+                        menuBtn.classList.remove('is-active');
+                        headerNav.classList.remove('is-active');
+                        document.body.style.overflow = '';
+                    });
+                });
+            }
+
+            // フェードインアニメーション（スクロール連動）
+            const items = document.querySelectorAll('.gallery-item');
+
+            // ギャラリーのアイテム数を自動カウントして表示する関数
+            function updateItemCount() {
+                // 表示されている（display: none でない）アイテムのみをカウント
+                const visibleItems = document.querySelectorAll('.gallery-item:not([style*="display: none"])');
+                const itemCount = visibleItems.length;
+                
+                const heroCountEl = document.querySelector('.scroll-text strong');
+                const toolbarCountEl = document.querySelector('.toolbar-count span');
+                
+                [heroCountEl, toolbarCountEl].forEach(el => {
+                    if (el) {
+                        el.style.opacity = 0;
+                        setTimeout(() => {
+                            el.textContent = itemCount;
+                            el.style.opacity = 1;
+                        }, 200);
+                    }
+                });
+            }
+
+            // 初期表示時のカウント実行
+            updateItemCount();
+
+            const observerOptions = {
+                root: null,
+                rootMargin: '0px 0px -15% 0px', // 画面下部より少し上で発火させる
+                threshold: 0
+            };
+
+            const observer = new IntersectionObserver((entries, observer) => {
+                let delay = 0;
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        setTimeout(() => {
+                            entry.target.classList.add('is-visible');
+                        }, delay);
+                        delay += 250; // 同時に画面に入った要素を250msずつ遅らせて表示
+                        observer.unobserve(entry.target); // 一度発火したら監視解除
+                    }
+                });
+            }, observerOptions);
+
+            items.forEach(item => observer.observe(item));
+
+            // --- Dev Preview Only ---
+            // This code simulates page transitions for local development.
+            // It should be removed before deploying to BASE.
+            const toItemPageLinks = document.querySelectorAll('.gallery-item');
+            const toIndexPageLink = document.querySelector('.header-logo a');
+            const indexPage = document.getElementById('dev-index-page');
+            const itemPage = document.getElementById('dev-item-page');
+            const aboutPage = document.getElementById('dev-about-page');
+            const contactPage = document.getElementById('dev-contact-page');
+
+            if (indexPage && itemPage) {
+                // --- 検索・タグフィルター（プレビュー用シミュレーション） ---
+                const searchInput = document.querySelector('.toolbar-search input');
+                const tagBtn = document.querySelector('.toolbar-tag-btn');
+                const tagDropdown = document.querySelector('.tag-dropdown');
+                const tagOptions = document.querySelectorAll('.tag-option');
+                let currentSearchTerm = '';
+                let currentTag = '';
+
+                function filterGallery() {
+                    items.forEach(item => {
+                        const title = item.querySelector('.item-title').textContent.toLowerCase();
+                        const desc = item.querySelector('.item-desc-hidden').textContent.toLowerCase();
+                        const tags = item.querySelector('.item-tags-hidden').textContent.toLowerCase();
+                        
+                        const matchSearch = currentSearchTerm === '' || title.includes(currentSearchTerm) || desc.includes(currentSearchTerm) || tags.includes(currentSearchTerm);
+                        const matchTag = currentTag === '' || tags.includes(currentTag.toLowerCase());
+
+                        if (matchSearch && matchTag) {
+                            item.style.display = '';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                    updateItemCount();
+                }
+
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => {
+                        currentSearchTerm = e.target.value.toLowerCase();
+                        filterGallery();
+                    });
+                }
+
+                if (tagBtn && tagDropdown) {
+                    tagBtn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        tagDropdown.classList.toggle('is-open');
+                    });
+                    document.addEventListener('click', (e) => {
+                        if (!e.target.closest('.toolbar-tag-wrapper')) {
+                            tagDropdown.classList.remove('is-open');
+                        }
+                    });
+                    tagOptions.forEach(option => {
+                        option.addEventListener('click', (e) => {
+                            const selectedTag = e.target.dataset.tag;
+                            if (currentTag === selectedTag) {
+                                currentTag = '';
+                                e.target.classList.remove('is-active');
+                                tagBtn.textContent = '+ TAG';
+                            } else {
+                                currentTag = selectedTag;
+                                tagOptions.forEach(opt => opt.classList.remove('is-active'));
+                                e.target.classList.add('is-active');
+                                tagBtn.textContent = `# ${selectedTag}`;
+                            }
+                            tagDropdown.classList.remove('is-open');
+                            filterGallery();
+                        });
+                    });
+                }
+
+                // ギャラリーのスクロール位置を記憶する変数
+                let indexScrollPos = 0;
+
+                // スムーズな画面遷移用のフェード処理
+                function fadeTransition(callback, scrollPos = 0) {
+                    document.body.style.opacity = '0';
+                    setTimeout(() => {
+                        document.body.style.minHeight = window.innerHeight + 'px'; // 画面のガタつき防止
+                        callback();
+                        window.scrollTo(0, scrollPos);
+                        document.body.style.opacity = '1';
+                        setTimeout(() => { document.body.style.minHeight = ''; }, 500); // 完了後にリセット
+                    }, 400); // CSSの transition 時間と合わせる
+                }
+
+                // ブラウザの履歴管理とページ切り替え用関数
+                function navigateTo(page, state = {}) {
+                    const targetScroll = page === 'index' ? indexScrollPos : 0;
+                    
+                    fadeTransition(() => {
+                        if (itemPage) itemPage.style.display = 'none';
+                        if (indexPage) indexPage.style.display = 'none';
+                        if (aboutPage) aboutPage.style.display = 'none';
+                        if (contactPage) contactPage.style.display = 'none';
+
+                        if (page === 'index') {
+                            if (indexPage) indexPage.style.display = 'block';
+                        } else if (page === 'item') {
+                            const mainImage = document.getElementById('main-image');
+                            const pageTitle = document.querySelector('.item-page-title');
+                            const pageSubtitle = document.querySelector('.item-page-subtitle');
+                            const pagePrice = document.querySelector('.item-page-price');
+                            const pageMeta = document.querySelector('.item-page-meta');
+                            const pageDesc = document.querySelector('.item-description');
+                            const pageTags = document.querySelector('.item-page-tags');
+
+                            if (mainImage && state.imgSrc) mainImage.src = state.imgSrc;
+                            if (pageTitle && state.title) pageTitle.textContent = state.title;
+                            if (pageSubtitle && state.subtitle) pageSubtitle.textContent = state.subtitle;
+                            if (pagePrice && state.price) pagePrice.textContent = state.price;
+                            if (pageMeta && state.metaHtml) pageMeta.innerHTML = state.metaHtml;
+                            if (pageDesc && state.descHtml) pageDesc.innerHTML = state.descHtml;
+                            if (pageTags && state.tagsHtml !== undefined) pageTags.innerHTML = state.tagsHtml;
+
+                            if (itemPage) itemPage.style.display = 'block';
+                        } else if (page === 'about') {
+                            if (aboutPage) aboutPage.style.display = 'block';
+                        } else if (page === 'contact') {
+                            if (contactPage) contactPage.style.display = 'block';
+                        }
+                    }, targetScroll);
+                }
+
+                // 初期の履歴状態をセット
+                history.replaceState({ page: 'index' }, '', '');
+
+                // ブラウザの自動スクロール復元を無効化（手動で制御するため）
+                if ('scrollRestoration' in history) {
+                    history.scrollRestoration = 'manual';
+                }
+
+                const devBackLink = document.getElementById('dev-back-link');
+                if (devBackLink) {
+                    devBackLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        history.pushState({ page: 'index' }, '', '');
+                        navigateTo('index');
+                    });
+                }
+
+                toItemPageLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        indexScrollPos = window.scrollY; // クリックした瞬間のスクロール位置を記憶
+
+                        const imgSrc = link.querySelector('.item-image img').src;
+                        const title = link.querySelector('.item-title').textContent;
+                        const subtitle = link.querySelector('.item-subtitle').textContent;
+                        const price = link.querySelector('.item-price').textContent;
+                        const metaHtml = link.querySelector('.item-meta').innerHTML;
+                        const descEl = link.querySelector('.item-desc-hidden');
+                        const descHtml = descEl ? descEl.innerHTML : '';
+                        const tagsEl = link.querySelector('.item-tags-hidden');
+                        const tagsHtml = tagsEl ? tagsEl.innerHTML : '';
+
+                        const state = { page: 'item', imgSrc, title, subtitle, price, metaHtml, descHtml, tagsHtml };
+                        history.pushState(state, '', '');
+                        navigateTo('item', state);
+                    });
+                });
+
+                // 関連作品のクリックシミュレーション
+                const relatedLinks = document.querySelectorAll('.related-item');
+                relatedLinks.forEach(link => {
+                    link.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        
+                        indexScrollPos = window.scrollY;
+
+                        const title = link.querySelector('.related-item-title').textContent;
+                        const itemData = dummyData.find(d => d.title === title) || dummyData[0];
+
+                        const imgSrc = itemData.img;
+                        const subtitle = itemData.subtitle;
+                        const price = itemData.price;
+                        const metaHtml = `<span>ID: ${itemData.id}</span><span>Status: Public</span>`;
+                        const descHtml = itemData.desc;
+                        const tagsHtml = itemData.tags.map(tag => `<span class="tag">${tag}</span>`).join('');
+
+                        const state = { page: 'item', imgSrc, title, subtitle, price, metaHtml, descHtml, tagsHtml };
+                        history.pushState(state, '', '');
+                        navigateTo('item', state);
+                    });
+                });
+
+                if (toIndexPageLink) {
+                    toIndexPageLink.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        history.pushState({ page: 'index' }, '', '');
+                        navigateTo('index');
+                    });
+                }
+
+                // ヘッダーナビゲーションのページ切り替え
+                const navLinksMain = document.querySelectorAll('.header-nav a');
+                if (navLinksMain.length >= 3) {
+                    navLinksMain[0].addEventListener('click', (e) => { // GALLERY
+                        e.preventDefault();
+                        history.pushState({ page: 'index' }, '', '');
+                        navigateTo('index');
+                    });
+                    navLinksMain[1].addEventListener('click', (e) => { // ABOUT US
+                        e.preventDefault();
+                        history.pushState({ page: 'about' }, '', '');
+                        navigateTo('about');
+                    });
+                    navLinksMain[2].addEventListener('click', (e) => { // CONNECT
+                        e.preventDefault();
+                        history.pushState({ page: 'contact' }, '', '');
+                        navigateTo('contact');
+                    });
+                }
+
+                // ブラウザの「戻る」「進む」ボタンへの対応
+                window.addEventListener('popstate', (e) => {
+                    if (e.state) {
+                        navigateTo(e.state.page, e.state);
+                    } else {
+                        navigateTo('index');
+                    }
+                });
+
+                // --- Cart Add Animation Simulation ---
+                const form = document.querySelector('.item-page form');
+                if (form) {
+                    // BASEの独自タグをプレビュー用のボタンに一時的に置き換え
+                    if (form.innerHTML.includes('{ItemSelectTag}')) {
+                        form.innerHTML = form.innerHTML.replace('{ItemSelectTag}', '<select><option>Select Variation</option></select>');
+                    }
+                    const cartWrapper = form.querySelector('.cart-btn-wrapper');
+                    if (cartWrapper && cartWrapper.innerHTML.includes('{ItemAddCart}')) {
+                        cartWrapper.innerHTML = '<button type="submit" class="dev-cart-btn">ADD TO CART</button>';
+                    }
+
+                    form.addEventListener('submit', (e) => {
+                        e.preventDefault();
+                        const btn = form.querySelector('button[type="submit"], input[type="submit"]');
+                        if (!btn) return;
+                        
+                        const originalText = btn.textContent || btn.value;
+                        const isInput = btn.tagName.toLowerCase() === 'input';
+                        const setText = (text) => { isInput ? btn.value = text : btn.textContent = text; };
+
+                        // 1. ローディング状態
+                        btn.classList.add('is-adding');
+                        setText('ADDING...');
+
+                        setTimeout(() => {
+                            // 2. 追加完了状態
+                            btn.classList.remove('is-adding');
+                            btn.classList.add('is-added');
+                            setText('ADDED TO CART');
+                            
+                            showToast(); // 3. トースト通知表示
+                            
+                            // 4. 元に戻す
+                            setTimeout(() => {
+                                btn.classList.remove('is-added');
+                                setText(originalText);
+                            }, 3000);
+                        }, 800);
+                    });
+                }
+
+                // --- About Page Simulation ---
+                const aboutText = document.querySelector('.about-text');
+                if (aboutText && aboutText.innerHTML.includes('{ShopIntroduction}')) {
+                    aboutText.innerHTML = '<p style="font-family: var(--font-serif); font-size: 18px; margin-bottom: 30px; color: var(--color-text);">ひとつひとつの作品とゆっくり向き合うための場所</p><p>洗練された空間の中で、日常を彩る特別なアートピースをご提案します。<br>皆様の生活に、新たな視点と豊かな時間をもたらす作品との出会いをお手伝いいたします。</p>';
+                }
+
+                function showToast() {
+                    const existingToast = document.getElementById('mock-toast');
+                    if (existingToast) existingToast.remove();
+                    const title = document.querySelector('.item-page-title').textContent;
+                    const toast = document.createElement('div');
+                    toast.id = 'mock-toast';
+                    toast.className = 'toast-notification';
+                    toast.innerHTML = `
+                        <div class="toast-info"><span class="toast-title">${title}</span><span class="toast-message">Successfully added to cart</span></div>
+                        <a href="#" class="toast-action" onclick="event.preventDefault(); alert('BASEのカート画面へ遷移します');">VIEW CART</a>
+                    `;
+                    document.body.appendChild(toast);
+                    void toast.offsetWidth; // trigger reflow
+                    toast.classList.add('is-visible');
+                    setTimeout(() => {
+                        toast.classList.remove('is-visible');
+                        setTimeout(() => toast.remove(), 500);
+                    }, 4000);
+                }
+            }
+            // --- End Dev Preview ---
+        });
+    </script>
+</body>
+</html>
